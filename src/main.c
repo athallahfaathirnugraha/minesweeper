@@ -2,12 +2,19 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <math.h>
 
 #include <raylib.h>
 
 #include "minesweeper.h"
 
-void draw_cell(minesweeper_t game, int x, int y)
+typedef enum
+{
+    scr_game,
+    scr_over,
+} screen_t;
+
+void draw_cell(minesweeper_t game, int x, int y, screen_t screen)
 {
     static uint cell_size = 38;
 
@@ -17,7 +24,7 @@ void draw_cell(minesweeper_t game, int x, int y)
     DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, LIGHTGRAY);
     DrawRectangleLines(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
 
-    if (!cell.opened) return;
+    if (screen == scr_game && !cell.opened) return;
 
     DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
 
@@ -42,18 +49,33 @@ void draw_cell(minesweeper_t game, int x, int y)
 int main(void)
 {
     srand(time(NULL));
+    screen_t screen = scr_game;
     
     minesweeper_t game = new_minesweeper(16, 16);
+
+    double elapsed = 0.f;
     
     InitWindow(608, 608, "minesweeper");
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        double dt = GetFrameTime();
+        elapsed += dt;
+        
+        if (screen == scr_game && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             int x = GetMouseX() / 38;
             int y = GetMouseY() / 38;
 
             open_cell(game, x, y);
+
+            if (get_cell(game, x, y)->bomb) screen = scr_over;
+        }
+
+        if (screen == scr_over && IsKeyPressed(KEY_R)) {
+            destroy_minesweeper(game);
+            game = new_minesweeper(16, 16);
+
+            screen = scr_game;
         }
 
         BeginDrawing();
@@ -61,8 +83,22 @@ int main(void)
 
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
-                draw_cell(game, x, y);
+                draw_cell(game, x, y, screen);
             }
+        }
+        
+        if (screen == scr_over) {
+            char *text = "R to restart";
+
+            float font_size = 60 + 4 * sin(elapsed);
+            Vector2 text_size = MeasureTextEx(GetFontDefault(), text, font_size, 0);
+
+            Vector2 text_pos = {
+                .x = 304 - text_size.x / 2.f,
+                .y = 304 - text_size.y / 2.f
+            };
+
+            DrawTextEx(GetFontDefault(), text, text_pos, font_size, 0, GREEN);
         }
         
         EndDrawing();
