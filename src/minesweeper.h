@@ -11,6 +11,7 @@ typedef struct
     bool bomb;
     bool flagged;
     uchar bomb_num;
+    bool opened;
 } cell_t;
 
 typedef struct
