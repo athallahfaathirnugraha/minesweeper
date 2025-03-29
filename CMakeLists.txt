@@ -19,7 +19,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 # Our Project
-set(SOURCE_FILES src/main.c)
+set(SOURCE_FILES src/main.c src/minesweeper.c)
 set(HEADER_FILES src/minesweeper.h)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})

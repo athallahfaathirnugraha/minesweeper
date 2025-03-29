@@ -8,7 +8,7 @@
 
 int main()
 {
-    minesweeper_t game;
+    minesweeper_t game = new_minesweeper(16, 16);
     
     InitWindow(600, 600, "minesweeper");
     SetTargetFPS(60);
@@ -20,6 +20,8 @@ int main()
     }
 
     CloseWindow();
+
+    destroy_minesweeper(game);
 
     return 0;
 }
