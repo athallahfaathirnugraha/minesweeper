@@ -14,7 +14,7 @@ typedef enum
     scr_over,
 } screen_t;
 
-void draw_cell(minesweeper_t game, int x, int y, screen_t screen)
+void draw_cell(minesweeper_t game, int x, int y, screen_t screen, Texture2D bomb_texture)
 {
     static uint cell_size = 38;
 
@@ -29,7 +29,14 @@ void draw_cell(minesweeper_t game, int x, int y, screen_t screen)
     DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
 
     if (cell.bomb) {
-        DrawText("bomb", x * cell_size, y * cell_size, 20, RED);
+        DrawTexturePro(
+            bomb_texture,
+            (Rectangle){ .x = 0, .y = 0, .width = 512, .height = 512 },
+            (Rectangle){ .x = x * cell_size, .y = y * cell_size, .width = cell_size, .height = cell_size },
+            (Vector2) { .x = 0, .y = 0 },
+            0.f,
+            WHITE
+        );
     } else if (cell.bomb_num > 0) {
         char text[2];
         sprintf(text, "%d", cell.bomb_num);
@@ -58,6 +65,9 @@ int main(void)
     InitWindow(608, 608, "minesweeper");
     SetTargetFPS(60);
 
+    Texture2D flag_texture = LoadTexture("resources/flag.png");
+    Texture2D bomb_texture = LoadTexture("resources/bomb.png");
+
     while (!WindowShouldClose()) {
         double dt = GetFrameTime();
         elapsed += dt;
@@ -83,7 +93,7 @@ int main(void)
 
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
-                draw_cell(game, x, y, screen);
+                draw_cell(game, x, y, screen, bomb_texture);
             }
         }
         
@@ -103,6 +113,9 @@ int main(void)
         
         EndDrawing();
     }
+
+    UnloadTexture(flag_texture);
+    UnloadTexture(bomb_texture);
 
     CloseWindow();
 
