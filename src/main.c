@@ -53,6 +53,28 @@ void draw_cell(minesweeper_t game, int x, int y, screen_t screen, Texture2D bomb
     }
 }
 
+void game_screen_update(screen_t *screen, minesweeper_t *game)
+{
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        int x = GetMouseX() / 38;
+        int y = GetMouseY() / 38;
+
+        open_cell(*game, x, y);
+
+        if (get_cell(*game, x, y)->bomb) *screen = scr_over;
+    }
+}
+
+void over_screen_update(screen_t *screen, minesweeper_t *game)
+{
+    if (IsKeyPressed(KEY_R)) {
+        destroy_minesweeper(*game);
+        *game = new_minesweeper(16, 16);
+
+        *screen = scr_game;
+    }
+}
+
 int main(void)
 {
     srand(time(NULL));
@@ -71,23 +93,16 @@ int main(void)
     while (!WindowShouldClose()) {
         double dt = GetFrameTime();
         elapsed += dt;
+
+        switch (screen) {
+            case scr_game:
+                game_screen_update(&screen, &game);
+                break;
+            case scr_over:
+                over_screen_update(&screen, &game);
+                break;
+        }
         
-        if (screen == scr_game && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            int x = GetMouseX() / 38;
-            int y = GetMouseY() / 38;
-
-            open_cell(game, x, y);
-
-            if (get_cell(game, x, y)->bomb) screen = scr_over;
-        }
-
-        if (screen == scr_over && IsKeyPressed(KEY_R)) {
-            destroy_minesweeper(game);
-            game = new_minesweeper(16, 16);
-
-            screen = scr_game;
-        }
-
         BeginDrawing();
         ClearBackground(BLACK);
 
