@@ -10,7 +10,7 @@ typedef struct
 {
     bool bomb;
     bool flagged;
-    unsigned char bomb_num;
+    uchar bomb_num;
 } cell_t;
 
 typedef struct
