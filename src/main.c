@@ -89,7 +89,7 @@ void game_screen_update(screen_t *screen, minesweeper_t *game)
         if (get_cell(*game, x, y)->bomb) *screen = scr_over;
     }
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyPressed(KEY_F)) {
         get_cell(*game, x, y)->flagged = !get_cell(*game, x, y)->flagged;
     }
 }
