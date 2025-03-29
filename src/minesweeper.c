@@ -69,8 +69,6 @@ void calculate_bomb_num(minesweeper_t minesweeper)
     }
 }
 
-#include <stdio.h>
-
 void open_cell(minesweeper_t minesweeper, uchar x, uchar y)
 {
     cell_t *cell = get_cell(minesweeper, x, y);
