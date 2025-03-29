@@ -4,12 +4,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define RUN_FOR_ADJACENT_CELLS_BEGIN(x, y, columns, rows) \
+#define BEGIN_RUN_FOR_ADJACENT_CELLS(x, y, columns, rows) \
     for (int _cx = (x) - 1; _cx <= (x) + 1; _cx++) { \
     for (int _cy = (y) - 1; _cy <= (y) + 1; _cy++) { \
         if ((_cx == (x) && _cy == (y)) || _cx < 0 || _cy < 0 || _cx >= (columns) || _cy >= (rows)) continue;
 
-#define RUN_FOR_ADJACENT_CELLS_END }}
+#define END_RUN_FOR_ADJACENT_CELLS }}
 
 minesweeper_t new_minesweeper(size_t columns, size_t rows)
 {
@@ -53,9 +53,9 @@ uchar cell_bomb_num(minesweeper_t minesweeper, uchar x, uchar y)
 {
     uchar count = 0;
     
-    RUN_FOR_ADJACENT_CELLS_BEGIN(x, y, minesweeper.columns, minesweeper.rows)
+    BEGIN_RUN_FOR_ADJACENT_CELLS(x, y, minesweeper.columns, minesweeper.rows)
         if (get_cell(minesweeper, _cx, _cy)->bomb) count++;
-    RUN_FOR_ADJACENT_CELLS_END
+    END_RUN_FOR_ADJACENT_CELLS
 
     return count;
 }
@@ -77,10 +77,10 @@ void open_cell(minesweeper_t minesweeper, uchar x, uchar y)
     cell->opened = true;
 
     if (!cell->bomb && cell->bomb_num == 0) {
-        RUN_FOR_ADJACENT_CELLS_BEGIN(x, y, minesweeper.columns, minesweeper.rows)
+        BEGIN_RUN_FOR_ADJACENT_CELLS(x, y, minesweeper.columns, minesweeper.rows)
             if (!get_cell(minesweeper, _cx, _cy)->opened) {
                 open_cell(minesweeper, _cx, _cy);
             }
-        RUN_FOR_ADJACENT_CELLS_END
+        END_RUN_FOR_ADJACENT_CELLS
     }
 }
