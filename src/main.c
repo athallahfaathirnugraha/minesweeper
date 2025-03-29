@@ -19,13 +19,15 @@ void draw_cell(minesweeper_t game, int x, int y)
 
     if (!cell.opened) return;
 
+    DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
+
     if (cell.bomb) {
         DrawText("bomb", x * cell_size, y * cell_size, 20, RED);
-    } else {
+    } else if (cell.bomb_num > 0) {
         char text[2];
         sprintf(text, "%d", cell.bomb_num);
         
-        DrawText(text, x * cell_size, y * cell_size, 20, BLACK);
+        DrawText(text, x * cell_size, y * cell_size, 30, BLACK);
     }
 }
 
