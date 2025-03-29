@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "types.h"
+
 typedef struct
 {
     bool bomb;
@@ -20,5 +22,12 @@ typedef struct
 
 minesweeper_t new_minesweeper(size_t columns, size_t rows);
 void destroy_minesweeper(minesweeper_t minesweeper);
+
+// the given minesweeper must be emptied
+// does not calculate bomb_num
+void generate_mines(minesweeper_t minesweeper, uchar min, uchar max);
+
+// calculates the bomb_num for each cell
+void calculate_bomb_num(minesweeper_t minesweeper);
 
 #endif
