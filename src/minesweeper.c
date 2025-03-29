@@ -42,7 +42,25 @@ void generate_mines(minesweeper_t minesweeper, uchar min, uchar max)
     }
 }
 
+uchar cell_bomb_num(minesweeper_t minesweeper, uchar x, uchar y)
+{
+    uchar count = 0;
+    
+    for (int cx = x - 1; cx <= x + 1; cx++) {
+        for (int cy = y - 1; cy <= y + 1; cy++) {
+            if (cx == x && cy == y) continue;
+            if (get_cell(minesweeper, cx, cy)->bomb) count++;
+        }
+    }
+
+    return count;
+}
+
 void calculate_bomb_num(minesweeper_t minesweeper)
 {
-    // TODO
+    for (uchar x = 0; x < minesweeper.columns; x++) {
+        for (uchar y = 0; y < minesweeper.rows; y++) {
+            get_cell(minesweeper, x, y)->bomb_num = cell_bomb_num(minesweeper, x, y);
+        }
+    }
 }

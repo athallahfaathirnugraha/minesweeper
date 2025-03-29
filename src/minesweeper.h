@@ -30,6 +30,9 @@ cell_t *get_cell(minesweeper_t minesweeper, uchar x, uchar y);
 // does not calculate bomb_num
 void generate_mines(minesweeper_t minesweeper, uchar min, uchar max);
 
+// calculate the bomb num for a cell
+uchar cell_bomb_num(minesweeper_t minesweeper, uchar x, uchar y);
+
 // calculates the bomb_num for each cell
 void calculate_bomb_num(minesweeper_t minesweeper);
 
