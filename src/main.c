@@ -14,8 +14,14 @@ typedef enum
     scr_over,
 } screen_t;
 
-void draw_cell(minesweeper_t game, int x, int y, screen_t screen, Texture2D bomb_texture)
-{
+void draw_cell(
+    minesweeper_t game,
+    int x,
+    int y,
+    screen_t screen,
+    Texture2D flag_texture,
+    Texture2D bomb_texture
+) {
     static uint cell_size = 38;
 
     int cell_id = y * 16 + x;
@@ -24,6 +30,26 @@ void draw_cell(minesweeper_t game, int x, int y, screen_t screen, Texture2D bomb
     DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, LIGHTGRAY);
     DrawRectangleLines(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
 
+    Rectangle src_rect = { .x = 0, .y = 0, .width = 512, .height = 512 };
+
+    Rectangle dst_rect = {
+        .x = x * cell_size,
+        .y = y * cell_size,
+        .width = cell_size,
+        .height = cell_size
+    };
+
+    if (cell.flagged && !cell.opened) {
+        DrawTexturePro(
+            flag_texture,
+            src_rect,
+            dst_rect,
+            (Vector2){ .x = 0, .y = 0 },
+            0.f,
+            WHITE
+        );
+    }
+
     if (screen == scr_game && !cell.opened) return;
 
     DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
@@ -31,9 +57,9 @@ void draw_cell(minesweeper_t game, int x, int y, screen_t screen, Texture2D bomb
     if (cell.bomb) {
         DrawTexturePro(
             bomb_texture,
-            (Rectangle){ .x = 0, .y = 0, .width = 512, .height = 512 },
-            (Rectangle){ .x = x * cell_size, .y = y * cell_size, .width = cell_size, .height = cell_size },
-            (Vector2) { .x = 0, .y = 0 },
+            src_rect,
+            dst_rect,
+            (Vector2){ .x = 0, .y = 0 },
             0.f,
             WHITE
         );
@@ -55,13 +81,16 @@ void draw_cell(minesweeper_t game, int x, int y, screen_t screen, Texture2D bomb
 
 void game_screen_update(screen_t *screen, minesweeper_t *game)
 {
+    int x = GetMouseX() / 38;
+    int y = GetMouseY() / 38;
+
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        int x = GetMouseX() / 38;
-        int y = GetMouseY() / 38;
-
         open_cell(*game, x, y);
-
         if (get_cell(*game, x, y)->bomb) *screen = scr_over;
+    }
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+        get_cell(*game, x, y)->flagged = !get_cell(*game, x, y)->flagged;
     }
 }
 
@@ -108,7 +137,7 @@ int main(void)
 
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
-                draw_cell(game, x, y, screen, bomb_texture);
+                draw_cell(game, x, y, screen, flag_texture, bomb_texture);
             }
         }
         
