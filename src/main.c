@@ -12,9 +12,20 @@ void draw_cell(minesweeper_t game, int x, int y)
     static uint cell_size = 38;
 
     int cell_id = y * 16 + x;
+    cell_t cell = game.cells[cell_id];
 
-    if (game.cells[cell_id].bomb) {
+    DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, LIGHTGRAY);
+    DrawRectangleLines(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
+
+    if (!(cell.opened)) return;
+
+    if (cell.bomb) {
         DrawText("bomb", x * cell_size, y * cell_size, 20, RED);
+    } else {
+        char text[2];
+        sprintf(text, "%d", cell.bomb_num);
+        
+        DrawText(text, x * cell_size, y * cell_size, 20, BLACK);
     }
 }
 
