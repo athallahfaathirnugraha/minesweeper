@@ -23,6 +23,11 @@ void destroy_minesweeper(minesweeper_t minesweeper)
     free(minesweeper.cells);
 }
 
+cell_t *get_cell(minesweeper_t minesweeper, uchar x, uchar y)
+{
+    return &(minesweeper.cells[y * minesweeper.columns + y]);
+}
+
 void generate_mines(minesweeper_t minesweeper, uchar min, uchar max)
 {
     int mine_num = min + rand() % (max - min + 1);

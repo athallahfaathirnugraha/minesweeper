@@ -24,6 +24,8 @@ typedef struct
 minesweeper_t new_minesweeper(size_t columns, size_t rows);
 void destroy_minesweeper(minesweeper_t minesweeper);
 
+cell_t *get_cell(minesweeper_t minesweeper, uchar x, uchar y);
+
 // the given minesweeper must be emptied
 // does not calculate bomb_num
 void generate_mines(minesweeper_t minesweeper, uchar min, uchar max);
