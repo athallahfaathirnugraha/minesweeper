@@ -17,7 +17,7 @@ void draw_cell(minesweeper_t game, int x, int y)
     DrawRectangle(x * cell_size, y * cell_size, cell_size, cell_size, LIGHTGRAY);
     DrawRectangleLines(x * cell_size, y * cell_size, cell_size, cell_size, DARKGRAY);
 
-    if (!(cell.opened)) return;
+    if (!cell.opened) return;
 
     if (cell.bomb) {
         DrawText("bomb", x * cell_size, y * cell_size, 20, RED);
@@ -39,6 +39,13 @@ int main()
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            int x = GetMouseX() / 38;
+            int y = GetMouseY() / 38;
+
+            get_cell(game, x, y)->opened = true;
+        }
+
         BeginDrawing();
         ClearBackground(BLACK);
 

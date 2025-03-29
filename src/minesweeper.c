@@ -10,7 +10,7 @@ minesweeper_t new_minesweeper(size_t columns, size_t rows)
 
     minesweeper.columns = columns;
     minesweeper.rows = rows;
-    minesweeper.cells = malloc(sizeof(cell_t) * columns * rows);
+    minesweeper.cells = calloc(sizeof(cell_t), columns * rows);
 
     generate_mines(minesweeper, 40, 50);
     calculate_bomb_num(minesweeper);
@@ -25,7 +25,7 @@ void destroy_minesweeper(minesweeper_t minesweeper)
 
 cell_t *get_cell(minesweeper_t minesweeper, uchar x, uchar y)
 {
-    return &(minesweeper.cells[y * minesweeper.columns + y]);
+    return &(minesweeper.cells[y * minesweeper.columns + x]);
 }
 
 void generate_mines(minesweeper_t minesweeper, uchar min, uchar max)
