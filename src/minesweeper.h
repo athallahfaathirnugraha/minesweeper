@@ -8,6 +8,7 @@ typedef struct
 {
     bool bomb;
     bool flagged;
+    unsigned char bomb_num;
 } cell_t;
 
 typedef struct
