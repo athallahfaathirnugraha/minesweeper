@@ -30,6 +30,7 @@ You win when you open all non-bomb cells.
 
 ![minesweeper](docs/example1.png)
 ![minesweeper](docs/example2.png)
+![minesweeper](docs/example3.png)
 
 ### description
 

@@ -12,6 +12,7 @@ typedef enum
 {
     scr_game,
     scr_over,
+    scr_win,
 } screen_t;
 
 void draw_cell(
@@ -87,6 +88,11 @@ void game_screen_update(screen_t *screen, minesweeper_t *game)
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         open_cell(*game, x, y);
         if (get_cell(*game, x, y)->bomb) *screen = scr_over;
+
+        if (won(*game)) {
+            *screen = scr_win;
+            return;
+        }
     }
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyPressed(KEY_F)) {
@@ -95,6 +101,16 @@ void game_screen_update(screen_t *screen, minesweeper_t *game)
 }
 
 void over_screen_update(screen_t *screen, minesweeper_t *game)
+{
+    if (IsKeyPressed(KEY_R)) {
+        destroy_minesweeper(*game);
+        *game = new_minesweeper(16, 16);
+
+        *screen = scr_game;
+    }
+}
+
+void win_screen_update(screen_t *screen, minesweeper_t *game)
 {
     if (IsKeyPressed(KEY_R)) {
         destroy_minesweeper(*game);
@@ -130,6 +146,9 @@ int main(void)
             case scr_over:
                 over_screen_update(&screen, &game);
                 break;
+            case scr_win:
+                win_screen_update(&screen, &game);
+                break;
         }
         
         BeginDrawing();
@@ -141,18 +160,22 @@ int main(void)
             }
         }
         
-        if (screen == scr_over) {
-            char *text = "R to restart";
+        if (screen == scr_over || screen == scr_win) {
+            char *text =
+                screen == scr_over
+                ? "you lose\n\n\n\nR to restart"
+                : "you win!\n\n\n\nR to restart";
 
             float font_size = 60 + 4 * sin(elapsed);
-            Vector2 text_size = MeasureTextEx(GetFontDefault(), text, font_size, 0);
+            float spacing = 4;
+            Vector2 text_size = MeasureTextEx(GetFontDefault(), text, font_size, spacing);
 
             Vector2 text_pos = {
                 .x = 304 - text_size.x / 2.f,
                 .y = 304 - text_size.y / 2.f
             };
 
-            DrawTextEx(GetFontDefault(), text, text_pos, font_size, 0, GREEN);
+            DrawTextEx(GetFontDefault(), text, text_pos, font_size, spacing, GREEN);
         }
         
         EndDrawing();

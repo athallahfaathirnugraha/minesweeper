@@ -35,6 +35,16 @@ cell_t *get_cell(minesweeper_t minesweeper, uchar x, uchar y)
     return &(minesweeper.cells[y * minesweeper.columns + x]);
 }
 
+bool won(minesweeper_t minesweeper)
+{
+    for (int i = 0; i < minesweeper.columns * minesweeper.rows; i++) {
+        cell_t cell = minesweeper.cells[i];
+        if (!cell.opened && !cell.bomb) return false;
+    }
+
+    return true;
+}
+
 void generate_mines(minesweeper_t minesweeper, uchar min, uchar max)
 {
     int mine_num = min + rand() % (max - min + 1);
@@ -62,8 +72,8 @@ uchar cell_bomb_num(minesweeper_t minesweeper, uchar x, uchar y)
 
 void calculate_bomb_num(minesweeper_t minesweeper)
 {
-    for (uchar x = 0; x < minesweeper.columns; x++) {
-        for (uchar y = 0; y < minesweeper.rows; y++) {
+    for (int x = 0; x < minesweeper.columns; x++) {
+        for (int y = 0; y < minesweeper.rows; y++) {
             get_cell(minesweeper, x, y)->bomb_num = cell_bomb_num(minesweeper, x, y);
         }
     }
