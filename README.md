@@ -22,7 +22,14 @@ cmake --build build
 
 ## minesweeper
 
-![minesweeper](screenshots/screenshot000.png "minesweeper")
+To open a cell, click on a cell.
+To flag a cell, right click a cell or hover over a cell and press F.
+The number of a cell tells you how many adjacent tiles are bombs.
+If you open a cell and it is a bomb, you lose.
+You win when you open all non-bomb cells.
+
+![minesweeper](docs/example1.png)
+![minesweeper](docs/example2.png)
 
 ### description
 
