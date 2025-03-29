@@ -27,11 +27,19 @@ void draw_cell(minesweeper_t game, int x, int y)
         char text[2];
         sprintf(text, "%d", cell.bomb_num);
         
-        DrawText(text, x * cell_size, y * cell_size, 30, BLACK);
+        int font_size = 25;
+        Vector2 text_size = MeasureTextEx(GetFontDefault(), text, font_size, 0);
+
+        Vector2 text_pos = {
+            .x = x * cell_size + cell_size / 2.f - text_size.x / 2.f,
+            .y = y * cell_size + cell_size / 2.f - text_size.y / 2.f
+        };
+
+        DrawTextEx(GetFontDefault(), text, text_pos, font_size, 0, BLACK);
     }
 }
 
-int main()
+int main(void)
 {
     srand(time(NULL));
     
