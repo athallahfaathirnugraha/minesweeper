@@ -36,4 +36,7 @@ uchar cell_bomb_num(minesweeper_t minesweeper, uchar x, uchar y);
 // calculates the bomb_num for each cell
 void calculate_bomb_num(minesweeper_t minesweeper);
 
+// open a cell. if blank will open adjacent cells
+void open_cell(minesweeper_t, uchar x, uchar y);
+
 #endif

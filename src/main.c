@@ -45,7 +45,7 @@ int main()
             int x = GetMouseX() / 38;
             int y = GetMouseY() / 38;
 
-            get_cell(game, x, y)->opened = true;
+            open_cell(game, x, y);
         }
 
         BeginDrawing();
